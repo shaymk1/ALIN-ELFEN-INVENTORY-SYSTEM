@@ -1,0 +1,27 @@
+{
+  "python.pythonPath": "ria\\Scripts\\python.exe",
+  "editor.formatOnSave": true,
+  "python.formatting.provider": "autopep8",
+  "python.linting.enabled": true,
+  "python.linting.lintOnSave": true,
+  "files.associations": {
+    "**/*.html": "html",
+    "**/templates/**/*.html": "django-html",
+    "**/templates/**/*": "django-txt",
+    "**/requirements{/**,*}.{txt,in}": "pip-requirements"
+  },
+}
+
+
+// "sqltools.connections": [
+//   {
+//     "previewlimit": 50,
+//     "server": "localhost",
+//     "port": 5432,
+//     "driver": "PostgreSQL",
+//     "name": "Django",
+//     "database": "db.postgresql",
+//     "username": "postgres",
+//     "password": 1234
+//   }
+// ]

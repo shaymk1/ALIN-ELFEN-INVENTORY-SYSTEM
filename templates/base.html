@@ -1,0 +1,146 @@
+ {% load static %} 
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" type = "text/css" href="{% static 'css/main.css' %}">
+
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+    
+	<style>
+		
+		#logo{
+		}
+
+		body{
+			{% comment %} background-color: #ebeff5; {% endcomment %}
+			margin-left: 15px;
+			margin-top: 10px;
+			padding-top: 4.5rem;
+			min-height:75rem;
+			
+		}
+
+
+
+   .form{
+		 padding-top:20px;
+	 }
+
+	 .list-items{
+		 padding-top:20px;
+	 }
+
+	 /*Align the title to the center of the page*/
+.table {
+  font-size: 13px;
+  text-align: center;
+  width: 95%;
+  margin: auto;
+  text-align: center;
+}
+
+/*Make alternating colors for the table rows*/
+.table tr:nth-child(odd) {
+  background:   #ffecb4;
+}
+
+.table tr:nth-child(even) {
+  background:     #5a3d2b;
+	color: white;
+}
+
+th {
+  background-color:#D07E0E;
+  color: white;
+}
+
+.display_table{
+	border-bottom-right-radius: 20px;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-bottom: 20px;
+	box-shadow: 12px 12px 20px 6px #2e6da4;
+}
+.header {
+    font-family: helvetica;
+    color: #5a3d2b;
+    font-size: 50px;
+    text-align: center;
+    width: 100%;
+    text-shadow: 6px 6px 6px #c9c6c6;
+    display: block;
+    font-weight: bolder;
+
+}
+
+.success{
+     list-style: none;
+     background-color: #D07E0E;
+     color: white;
+     box-shadow: 12px 12px 12px #e61c66;
+     text-align: center;
+ }
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+{% comment %} img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  width: 150px;
+} {% endcomment %}
+
+
+		
+
+	
+
+		{% comment %} #total-orders{
+			background-color: #4cb4c7;
+		}
+
+
+		#orders-delivered{
+			background-color: #7abecc;
+		}
+
+		#orders-pending{
+			background-color: #7CD1C0;
+		} {% endcomment %}
+
+	</style
+   
+
+ 
+    <!-- JavaScript Bundle with Popper -->
+
+    <title>
+      {% block title %} Alin Elfen Inventory Management System {% endblock %}
+    </title>
+  </head>
+  <body>
+
+  {% include 'navbar.html'      %}
+    {% block content %}
+
+    
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    {% endblock %}
+  </body>
+</html>
+
+

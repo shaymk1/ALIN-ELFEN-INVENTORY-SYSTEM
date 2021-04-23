@@ -1,0 +1,92 @@
+
+{% extends 'base.html' %}
+{% load static  %}
+{% load crispy_forms_tags %}
+
+
+
+  {% block content %}
+    <main role="main" class="container">
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+               {% endfor %}
+        </ul>
+    {% endif %}
+    <div class = "jumbotron">
+    <div class = "header" >{{header}}</div>
+
+   
+
+  <form method='POST' action=''>
+      {% csrf_token %}
+      {{form|crispy}}
+        <input type="submit" value='Search'/>
+    </form>
+<br>
+    
+    
+     <div class="display_table">
+      
+  
+        <table class='table'>
+        <thead>
+          <tr>
+            <th>COUNT</th>
+            <th>CATEGORY</th> 
+            <th>ITEM NAME</th>
+            <th>TOTAL STOCK QUANTITY</th>
+            <th>ISSUED QUANTITY</th>
+            <th>ISSUED BY</th>
+            <th>ISSUED TO</th>
+            <th>DELETE</th>
+          </tr>
+        </thead>
+      {% for instance in queryset %}
+          <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{instance.category}}</td> 
+            <td><a href="{% url 'update_items' instance.id %}">{{instance.item_name}}</a></td>
+            <td>{{instance.total_stock_quantity}}</td>
+            <td>{{instance.issued_quantity}}</td>
+            <td>{{instance.issued_by}}</td>
+            <td>{{instance.issued_to}}</td>
+            <td><a href="{% url 'delete_items' instance.id %}"><img class="thumbnail img-responsive" src="{% static 'images/delete.png' %}style="maxwidth:100%;height: auto;max-height: 100%;></a></td>
+          </tr>
+      {% endfor %}
+    </table>
+   </div>
+    </div>
+    </main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  {% endblock %}
+</body>
+</html>
