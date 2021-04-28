@@ -5,60 +5,99 @@
 
 
 
-  {% block content %}
-    <main role="main" class="container">
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-               {% endfor %}
-        </ul>
-    {% endif %}
-    <div class = "jumbotron">
-    <div class = "header" >{{header}}</div>
+{% block content %}
+
+
+<main role="main" class="container">
+
+
+ <div class = "jumbotron"> 
+     <div class = "header" >{{header}}</div>
+    <div class="row"><!--Start of row-->
 
    
-
-  <form method='POST' action=''>
-      {% csrf_token %}
-      {{form|crispy}}
-        <input type="submit" value='Search'/>
-    </form>
-<br>
-    
-    
-     <div class="display_table">
+      <div class="col-sm-2"><!--Start of first col-sm-2--> 
+          <form method='POST' action=''>
+            {% csrf_token %}
+            {{form|crispy}}
+              <input class="btn btn-primary mybutton" type="submit" value='Search / Submit'/>
+          </form> 
+          <br></br>
+          <a href="/add_items"><div class="btn btn-primary mybutton">Add Items</div></a><br><br>
+          <a href="/list_history"><div class="btn btn-primary mybutton">List History</div></a><br> 
+       </div><!--end of col-sm-2-->
+          <br>
+          
+      <div class="col-sm-10"><!--Start of second col-sm-10-->     
+          <div class="display_table">
+          
       
-  
-        <table class='table'>
-        <thead>
-          <tr>
-            <th>COUNT</th>
-            <th>CATEGORY</th> 
-            <th>ITEM NAME</th>
-            <th>TOTAL STOCK QUANTITY</th>
-            <th>ISSUED QUANTITY</th>
-            <th>ISSUED BY</th>
-            <th>ISSUED TO</th>
-            <th>DELETE</th>
-          </tr>
-        </thead>
-      {% for instance in queryset %}
-          <tr>
-            <td>{{forloop.counter}}</td>
-            <td>{{instance.category}}</td> 
-            <td><a href="{% url 'update_items' instance.id %}">{{instance.item_name}}</a></td>
-            <td>{{instance.total_stock_quantity}}</td>
-            <td>{{instance.issued_quantity}}</td>
-            <td>{{instance.issued_by}}</td>
-            <td>{{instance.issued_to}}</td>
-            <td><a href="{% url 'delete_items' instance.id %}"><img class="thumbnail img-responsive" src="{% static 'images/delete.png' %}style="maxwidth:100%;height: auto;max-height: 100%;></a></td>
-          </tr>
-      {% endfor %}
-    </table>
-   </div>
-    </div>
-    </main>
+            <table class='table'>
+              <thead>
+                <tr>
+                  
+                  {% comment %} <th>COUNT</th>  {% endcomment %}
+                  {% comment %} <th>ID</th>  {% endcomment %}
+                  <th>CATEGORY</th> 
+                  <th>ITEM NAME</th>
+                  <th>TOTAL STOCK QUANTITY</th>
+                  <th>RE-ORDER LEVEL</th>
+                  <th>ISSUED QUANTITY</th>
+                  <th>ISSUED BY</th>
+                  <th>ISSUED TO</th>
+                  <th>DATE CREATED</th>
+                  <th>LAST UPDATED</th>
+                   <th>DELETE</th>
+                  {% comment %} <th>DATE ISSUED</th> {% endcomment %}
+                  {% comment %} <th>DATE RETURNED</th> {% endcomment %}
+                 
+
+                </tr>
+              </thead>
+            {% for instance in queryset %}
+                <tr>
+                  {% comment %} <td>{{forloop.counter}}</td>    {% endcomment %}
+                  <td>{{instance.category}}</td> 
+                  <td><a href="{% url 'update_items' instance.id %}">{{instance.item_name}}</a></td>
+                  
+                    <td>        
+            {% if instance.total_stock_quantity <= instance.reorder_level %}
+                      <div style="background-color: red;">
+                          <a href="{% url 'stock_detail' instance.id %}">
+                          {{instance.total_stock_quantity}}</a>
+                      </div>
+            {% else %}
+                <a href="{% url 'stock_detail' instance.id %}">
+                {{instance.total_stock_quantity}}</a>
+            {% endif %}
+                   </td> 
+                  <td><a href="{% url 'reorder_level' instance.id %}">{{instance.reorder_level}}</a></td>
+                  <td>{{instance.issued_quantity}}</td>
+                  <td>{{instance.issued_by}}</td>
+                  <td>{{instance.issued_to}}</td>
+                  <td>{{instance.date_created}}</td>
+                  <td>{{instance.last_updated}}</td>
+                  {% comment %} <td>{{instance.date_issued}}</td>
+                  <td>{{instance.date_returned}}</td> {% endcomment %}
+                  <td><a href="{% url 'delete_items' instance.id %}">
+                  <img  src="{% static 'images/delete.png' %} alt = ""></a></td>
+                </tr>
+
+               
+            {% endfor %}
+            </table>
+          </div>
+       
+      </div><!--End of second col-sm-10-->
+
+    </div><!--End of row--> 
+
+
+ </div>
+
+
+
+</main>
 
 
 

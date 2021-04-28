@@ -20,3 +20,38 @@ th {
   background-color: #FF4500;
   color: white;
 }
+
+
+
+/*
+img 
+  max-width: 100%;
+  height: auto;
+*/
+/*
+{% comment %} img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  width: 150px;
+} % endcomment %/
+
+
+		
+
+	
+
+		{% comment %} #total-orders{
+			background-color: #4cb4c7;
+		}
+
+
+		#orders-delivered{
+			background-color: #7abecc;
+		}
+
+		#orders-pending{
+			background-color: #7CD1C0;
+		} {% endcomment %}
+
+	</style

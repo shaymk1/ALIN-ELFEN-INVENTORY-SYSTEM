@@ -21,11 +21,20 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('registration.backends.default.urls')),
     path('', include('store.urls')),
     path('list_items/', include('store.urls')),
     path('add_items/', include('store.urls')),
+    # path('receive_new_stock/', include('store.urls')),
     path('update_items/<str:pk>/', include('store.urls')),
     path('delete_items/<str:pk>/', include('store.urls')),
+    path('stock_detail/<str:pk>/', include('store.urls')),
+    path('issue_items/<str:pk>/', include('store.urls')), 
+    path('receive_items/<str:pk>/', include('store.urls')),
+    path('reorder_level/<str:pk>/', include('store.urls')),
+    path('list_history/', include('store.urls')),
+    # path('received_stock/<str:pk>/', include('store.urls')),
+
 
 ]
 

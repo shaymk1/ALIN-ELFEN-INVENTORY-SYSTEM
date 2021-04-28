@@ -102,10 +102,14 @@ class Category(models.Model):
 
 class Stock(models.Model):
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, default='1', blank=True)
+        Category, on_delete=models.CASCADE)
     item_name = models.CharField(
         max_length=100, blank=True, null=True)
-    received_stock = models.IntegerField(default='0', blank=True, null=True)
+    received_new_stock_quantity = models.IntegerField(
+        default='0', blank=True, null=True)
+    new_stock_received_by = models.CharField(
+        max_length=100, blank=True, null=True)
+    received_quantity = models.IntegerField(default='0', blank=True, null=True)
     total_stock_quantity = models.IntegerField(
         default='0', blank=True, null=True)
     issued_quantity = models.IntegerField(default='0', blank=True, null=True)
@@ -113,9 +117,10 @@ class Stock(models.Model):
     issued_to = models.CharField(max_length=100, blank=True, null=True)
     created_by = models.CharField(max_length=100, blank=True, null=True)
     reorder_level = models.IntegerField(default='0', blank=True, null=True)
+    date_created = models.DateTimeField(auto_now_add=True, auto_now=False)
     last_updated = models.DateTimeField(auto_now_add=False, auto_now=True)
-    issue_date = models.DateTimeField(auto_now_add=False, auto_now=True)
-    returned_date = models.DateTimeField(auto_now_add=False, auto_now=True)
+    date_issued = models.DateTimeField(auto_now_add=False, auto_now=True)
+    date_returned = models.DateTimeField(auto_now_add=False, auto_now=True)
     stock_received_date = models.DateTimeField(
         auto_now_add=False, auto_now=True)
     # export_to_CSV = models.BooleanField(default=False)
@@ -124,6 +129,54 @@ class Stock(models.Model):
     sizes_others = models.CharField(max_length=100, choices=sizes_words)
     returned = models.BooleanField(default=False)
     condition_returned = models.TextField(blank=True)
+    # start_date = models.DateTimeField(
+    #     auto_now_add=False, auto_now=False, null=True)
+    # end_date = models.DateTimeField(
+    #     auto_now_add=False, auto_now=False, null=True)
 
     def __str__(self):
         return self.item_name + ' ' + str(self.total_stock_quantity)
+
+    # date = models.DateTimeField(auto_now_add=False, auto_now=False, blank=True, null=True)
+
+
+class StockHistory(models.Model):
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, blank=True, null=True)
+    item_name = models.CharField(
+        max_length=100, blank=True, null=True)
+    received_new_stock_quantity = models.IntegerField(
+        default='0', blank=True, null=True)
+    new_stock_received_by = models.CharField(
+        max_length=100, blank=True, null=True)
+    received_quantity = models.IntegerField(default='0', blank=True, null=True)
+    total_stock_quantity = models.IntegerField(
+        default='0', blank=True, null=True)
+    issued_quantity = models.IntegerField(default='0', blank=True, null=True)
+    issued_by = models.CharField(max_length=100, blank=True, null=True)
+    issued_to = models.CharField(max_length=100, blank=True, null=True)
+    created_by = models.CharField(max_length=100, blank=True, null=True)
+    reorder_level = models.IntegerField(default='0', blank=True, null=True)
+    date_created = models.DateTimeField(
+        auto_now_add=False, auto_now=False, null=True)
+    last_updated = models.DateTimeField(
+        auto_now_add=False, auto_now=False, null=True)
+    date_issued = models.DateTimeField(
+        auto_now_add=False, auto_now=False, null=True)
+    date_returned = models.DateTimeField(
+        auto_now_add=False, auto_now=False, null=True)
+    stock_received_date = models.DateTimeField(
+        auto_now_add=False, auto_now=False, null=True)
+    # export_to_CSV = models.BooleanField(default=False)
+    sizes_ferrules = models.CharField(
+        max_length=100, choices=ferrules, blank=True, null=True)
+    sizes_lugs = models.CharField(
+        max_length=100, choices=lugs, blank=True, null=True)
+    sizes_others = models.CharField(
+        max_length=100, choices=sizes_words, blank=True, null=True)
+    returned = models.BooleanField(default=False, blank=True, null=True)
+    condition_returned = models.TextField(blank=True, null=True)
+    # start_date = models.DateTimeField(
+    #     auto_now_add=False, auto_now=False, null=True)
+    # end_date = models.DateTimeField(
+    #     auto_now_add=False, auto_now=False, null=True)

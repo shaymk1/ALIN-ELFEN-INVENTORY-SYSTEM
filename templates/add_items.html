@@ -7,19 +7,32 @@
   {% block content %}
 
 
+<main role = "main" class = "container">
+    <div class="jumbotron">
+				<h1>{{title}}</h1>
+			
+		{% comment %} <div class = "form"> {% endcomment %}
+				<div class="row"><!--Start of row-->
+					<div class="col-sm-5"><!--Start of col-->
+							<div class="display_table">
 
-<div class = "form">
-  <form  action="" method="post">
-  {% csrf_token %}
-  
-  {{form|crispy}}
+										<form  action="" method="post">
+										{% csrf_token %}
+										
+										{{form|crispy}}
 
-  <input type="submit" value="save">
-  
-  
-  </form>
+										<input class="btn btn-primary" type="submit" value="save">
+										
+										
+										</form>
+							</div>
 
-	</div>
+					</div><!--end of col-->		
+				</div><!--end of row-->
+  	</div>
+</main>
+
+
   
   
   

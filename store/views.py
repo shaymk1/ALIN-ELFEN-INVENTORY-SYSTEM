@@ -4,21 +4,25 @@ from .models import *
 from .forms import *
 import csv
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
 
 def home(request):
-    title = 'Alin Elfen Inventory Management System'
+    title = 'Inventory Management System'
     form = 'Alin Elfen Inventory Management System'
     context = {
         'title': title,
         'form': form
     }
 
+    # return redirect('/list_items')
+
     return render(request, 'home.html', context)
 
 
+# @login_required
 def list_items(request):
     header = 'List Of Items'
     form = StockSearchForm(request.POST or None)
@@ -30,10 +34,17 @@ def list_items(request):
     }
 
     if request.method == 'POST':
-        queryset = Stock.objects.filter(
-            # category__icontains=form[' category'].value(),
-            item_name__icontains=form['item_name'].value()
-        )
+        # queryset = Stock.objects.filter(
+        #     # category__icontains=form[' category'].value(),
+        #     item_name__icontains=form['item_name'].value()
+        # )
+        queryset = StockHistory.objects.filter(
+            item_name__icontains=form['item_name'].value(),
+            last_updated__range=[
+                form['start_date'].value(),
+                form['end_date'].value()
+            ]
+	       )
 
         if form['export_to_CSV'].value() == True:
             response = HttpResponse(content_type='text/csv')
@@ -54,6 +65,8 @@ def list_items(request):
 
     return render(request, 'list_items.html', context)
 
+# @login_required
+
 
 def add_items(request):
     title = 'Add Items'
@@ -69,6 +82,22 @@ def add_items(request):
     }
 
     return render(request, 'add_items.html', context)
+
+
+# def receive_new_stock(request):
+#     title = 'Receive New Stock'
+#     form = ReceiveNewStockItems(request.POST or None)
+#     if form.is_valid():
+#         form.save()
+#         messages.success(request, 'Successfully added new items to stock!')
+#         return redirect('/list_items')
+
+#     context = {
+#         'title': title,
+#         'form': form
+#     }
+
+#     return render(request, 'receive_new_stock.html', context)
 
 
 def update_items(request, pk):
@@ -94,3 +123,137 @@ def delete_items(request, pk):
         messages.success(request, 'Successfully Deleted!')
         return redirect('/list_items')
     return render(request, 'delete_items.html')
+
+
+def stock_detail(request, pk):
+    queryset = Stock.objects.get(id=pk)
+    context = {
+
+        "queryset": queryset
+    }
+    return render(request, "stock_detail.html", context)
+
+
+def issue_items(request, pk):
+    queryset = Stock.objects.get(id=pk)
+    form = IssueForm(request.POST or None, instance=queryset)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.received_quantity = 0
+        instance.total_stock_quantity -= instance.issued_quantity
+        instance.issued_by = str(request.user)
+        instance.new_stock_received_by = str(request.user)
+
+        messages.success(request, "Issued" + " " + str(instance.issued_quantity) + " " + str(instance.item_name) + " " + " SUCCESSFULLY. " + str(instance.total_stock_quantity) +
+                         " " + str(instance.item_name) + " " + "are now left in Store")
+        instance.save()
+
+        return redirect('/stock_detail/'+str(instance.id))
+        # return HttpResponseRedirect(instance.get_absolute_url())
+
+    context = {
+        "title": 'Issue ' + str(queryset.item_name),
+        "queryset": queryset,
+        "form": form,
+        "username": 'Issue By: ' + str(request.user),
+    }
+    return render(request, "add_items.html", context)
+
+
+def receive_items(request, pk):
+    queryset = Stock.objects.get(id=pk)
+    form = ReceiveForm(request.POST or None, instance=queryset)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.issued_quantity = 0
+        instance.total_stock_quantity += instance.received_quantity
+        instance.issued_by = str(request.user)
+        instance.new_stock_received_by = str(request.user)
+        instance.save()
+        messages.success(request, "Received SUCCESSFULLY. " +
+                         str(instance.received_quantity) + " " + str(instance.item_name) + " " + " are now added to the stock")
+
+        return redirect('/stock_detail/'+str(instance.id))
+        # return HttpResponseRedirect(instance.get_absolute_url())
+    context = {
+        "title": 'Receive ' + str(queryset.item_name),
+        "instance": queryset,
+        "form": form,
+        "username": 'Receive By: ' + str(request.user),
+    }
+    return render(request, "add_items.html", context)
+
+
+def reorder_level(request, pk):
+    queryset = Stock.objects.get(id=pk)
+    form = ReorderLevelForm(request.POST or None, instance=queryset)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.save()
+        messages.success(request, "Reorder level for " + str(instance.item_name) +
+                         " is updated to " + str(instance.reorder_level))
+
+        return redirect("/list_items")
+    context = {
+        "instance": queryset,
+        "form": form,
+    }
+    return render(request, "add_items.html", context)
+
+
+# @login_required
+def list_history(request):
+    header = 'HISTORY'
+    queryset = StockHistory.objects.all()
+    # form = StockSearchForm(request.POST or None)
+    form = StockHistorySearchForm(request.POST or None)
+    context = {
+        "header": header,
+        "queryset": queryset,
+        "form": form
+    }
+
+    if request.method == 'POST':
+        category = form['category'].value()
+        queryset = StockHistory.objects.filter(
+            item_name__icontains=form['item_name'].value()
+        )
+
+        if (category != ''):
+            queryset = queryset.filter(category_id=category)
+        if form['export_to_CSV'].value() == True:
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="StockHistory.csv"'
+            writer = csv.writer(response)
+            writer.writerow(
+
+                ['CATEGORY',
+                 'ITEM NAME',
+                 'TOTAL STOCK QUANTITY',
+                 'ISSUED QUANTITY',
+                 'RECEIVED QUANTITY',
+                 'NEW_STOCK_RECEIVED_BY',
+                 'ISSUED TO',
+                 'ISSUED BY',
+                 'LAST UPDATED']
+            )
+            instance = queryset
+            for stock in instance:
+                writer.writerow(
+                    [stock.category,
+                     stock.item_name,
+                     stock.total_stock_quantity,
+                     stock.issued_quantity,
+                     stock.received_quantity,
+                     stock.new_stock_received_by,
+                     stock.issued_to,
+                     stock.issued_by,
+                     stock.last_updated])
+            return response
+
+        context = {
+            "form": form,
+            "header": header,
+            "queryset": queryset,
+        }
+    return render(request, "list_history.html", context)
